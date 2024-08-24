@@ -1,17 +1,17 @@
 {
-  "name": "<insert-plugin-name>",
-  "author": "",
-  "description": "",
+  "name": "logseq-pandoc-plugin",
+  "author": "benjypng",
+  "description": "Easily convert blocks to docx, pptx, html using Pandoc",
   "license": "MIT",
   "logseq": {
-    "id": "<insert-plugin-name>",
-    "title": "<insert-plugin-name>",
+    "id": "logseq-pandoc-plugin",
+    "title": "logseq-pandoc-plugin",
     "icon": "./icon.svg",
     "main": "dist/index.html"
   },
   "scripts": {
     "dev": "npx vite",
-    "build": "npx tsc && npx vite build",
+    "build": "npx eslint . --fix && npx tsc && npx vite build",
     "preview": "npx vite preview",
     "prepare": "husky"
   },
@@ -24,16 +24,14 @@
         "@semantic-release/github",
         {
           "assets": [
-            "<insert-plugin-name>.zip"
+            "logseq-pandoc-plugin.zip"
           ]
         }
       ]
     ]
   },
   "dependencies": {
-    "@logseq/libs": "^0.0.17",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "@logseq/libs": "^0.0.17"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
