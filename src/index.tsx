@@ -1,17 +1,17 @@
 import '@logseq/libs'
 
 import { TIMEOUT } from './constants'
-import {
-  convertToDocx,
-  convertToHtml,
-  convertToLatex,
-  convertToPptx,
-} from './pandoc-services'
+import { menuItems } from './menu-items'
 import { settings } from './settings'
+import { getAllNestedContent } from './utils/get-all-nested-content'
 import { pandocInit } from './utils/pandoc-init'
 
 const main = async () => {
   console.log('logseq-pandoc-plugin loaded')
+  await logseq.UI.showMsg('logseq-pandoc-plugin: Getting ready...', 'success', {
+    key: 'introMsg',
+    timeout: 9999,
+  })
 
   const scriptEl = parent.document.createElement('script')
   scriptEl.src = `${logseq.baseInfo.lsr}pandoc/pandoc.js`
@@ -20,43 +20,37 @@ const main = async () => {
 
   setTimeout(async () => {
     const pandoc = await pandocInit()
-    logseq.UI.showMsg('Able to start using Pandoc now')
+    logseq.UI.closeMsg('introMsg')
+    logseq.UI.showMsg('Able to start using Pandoc now', 'success')
 
-    await logseq.Editor.registerBlockContextMenuItem(
-      'Pandoc: Convert to docx',
-      async (e) => {
-        const blk = await logseq.Editor.getBlock(e.uuid)
-        if (!blk) return
-        await convertToDocx(pandoc, blk.content)
-      },
-    )
+    // Create page context menu items
+    if (logseq.settings!.showPageMenu) {
+      for (const item of menuItems) {
+        logseq.App.registerPageMenuItem(item.label, async (e) => {
+          // pbt includesChildren by default
+          const pbt = await logseq.Editor.getPageBlocksTree(e.page)
+          if (!pbt || pbt.length === 0) return
 
-    await logseq.Editor.registerBlockContextMenuItem(
-      'Pandoc: Convert to pptx',
-      async (e) => {
-        const blk = await logseq.Editor.getBlock(e.uuid)
-        if (!blk) return
-        await convertToPptx(pandoc, blk.content)
-      },
-    )
+          const allContent = getAllNestedContent(pbt)
+          await item.action(pandoc, allContent)
+        })
+      }
+    }
 
-    await logseq.Editor.registerBlockContextMenuItem(
-      'Pandoc: Convert to HTML',
-      async (e) => {
-        const blk = await logseq.Editor.getBlock(e.uuid)
-        if (!blk) return
-        await convertToHtml(pandoc, blk.content)
-      },
-    )
+    // Create block context menu items
+    if (logseq.settings!.showBlockMenu) {
+      for (const item of menuItems) {
+        logseq.Editor.registerBlockContextMenuItem(item.label, async (e) => {
+          const blk = await logseq.Editor.getBlock(e.uuid, {
+            includeChildren: true,
+          })
+          if (!blk) return
 
-    await logseq.Editor.registerBlockContextMenuItem(
-      'Pandoc: Convert to Latex',
-      async (e) => {
-        const blk = await logseq.Editor.getBlock(e.uuid)
-        if (!blk) return
-        await convertToLatex(pandoc, blk.content)
-      },
-    )
+          const allContent = getAllNestedContent([blk])
+          await item.action(pandoc, allContent)
+        })
+      }
+    }
   }, TIMEOUT)
 }
 

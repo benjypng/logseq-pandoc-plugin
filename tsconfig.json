@@ -32,7 +32,7 @@
 		"**/*.tsx",
 		"**/*.cjs",
 		"**/*.mjs"
-	],
+, "src/services-map.json"	],
 	"exclude": [
 		"node_modules",
 		"./dist/**/*",
