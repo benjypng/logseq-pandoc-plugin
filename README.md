@@ -1,5 +1,6 @@
 # Overview
 
+![](/screenshots/demo.gif)
 Describe your plugin.
 
 # Usage
