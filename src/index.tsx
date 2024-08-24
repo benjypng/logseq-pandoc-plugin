@@ -31,7 +31,7 @@ const main = async () => {
           const pbt = await logseq.Editor.getPageBlocksTree(e.page)
           if (!pbt || pbt.length === 0) return
 
-          const allContent = getAllNestedContent(pbt)
+          const allContent = await getAllNestedContent(pbt)
           await item.action(pandoc, allContent)
         })
       }
@@ -46,7 +46,7 @@ const main = async () => {
           })
           if (!blk) return
 
-          const allContent = getAllNestedContent([blk])
+          const allContent = await getAllNestedContent([blk])
           await item.action(pandoc, allContent)
         })
       }
