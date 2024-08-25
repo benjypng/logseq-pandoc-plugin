@@ -13,10 +13,14 @@ const main = async () => {
     timeout: 9999,
   })
 
-  const scriptEl = parent.document.createElement('script')
-  scriptEl.src = `${logseq.baseInfo.lsr}pandoc/pandoc.js`
-  scriptEl.type = 'module'
-  parent.document.head.appendChild(scriptEl)
+  // Check if loaded already first
+  const scriptSrc = `${logseq.baseInfo.lsr}pandoc/pandoc.js`
+  if (!parent.document.querySelector(`script[src="${scriptSrc}"]`)) {
+    const scriptEl = parent.document.createElement('script')
+    scriptEl.src = scriptSrc
+    scriptEl.type = 'module'
+    parent.document.head.appendChild(scriptEl)
+  }
 
   setTimeout(async () => {
     const pandoc = await pandocInit()
