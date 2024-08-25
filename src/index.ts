@@ -55,6 +55,42 @@ const main = async () => {
         })
       }
     }
+
+    // Create page context menu for shell command creation
+    logseq.App.registerPageMenuItem(
+      'Pandoc: Copy shell cmd for docx with filter',
+      async (e) => {
+        // const convertDateToFilename = (date: number) => {
+        //   const dateString = date.toString()
+        //   const year = dateString.slice(0, 4)
+        //   const month = dateString.slice(4, 6)
+        //   const day = dateString.slice(6, 8)
+        //   return `${year}_${month}_${day}`
+        // }
+        // OPTION 1: Just pass the markdown file for pandoc to convert. However, there is the trade-off for the bullet marks.
+        // const page = await logseq.Editor.getPage(e.page)
+        // if (!page) return
+        // const graphInfo = await logseq.App.getCurrentGraph()
+        // if (!graphInfo) return
+        // const path = page['journal?']
+        //   ? `${graphInfo.path}/journals/`
+        //   : `${graphInfo.path}/pages/`
+        // const pageName = page['journal?']
+        //   ? convertDateToFilename(page.journalDay!)
+        //   : encodeURIComponent(page.originalName)
+        // const pathWithPageName = `${path}${pageName}.md`
+        // const pandocShellCmd = `pandoc --lua-filter=zotero.lua --from=markdown --to=docx --output=output.docx ${pathWithPageName}`
+
+        // OPTION 2: Cat the actual markdown STRING to pandoc.
+        const pbt = await logseq.Editor.getPageBlocksTree(e.page)
+        if (!pbt || pbt.length === 0) return
+        const mdString = await getAllNestedContent(pbt)
+        const pandocShellCmd = `cat << EOF | pandoc --lua-filter=${logseq.settings!.pathToFilter} --from=markdown --to=docx --output=${logseq.settings!.pathToOutput}
+${mdString}
+EOF`
+        await parent.navigator.clipboard.writeText(pandocShellCmd)
+      },
+    )
   }, TIMEOUT)
 }
 

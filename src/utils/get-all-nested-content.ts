@@ -19,7 +19,6 @@ export const getAllNestedContent = async (
         if (!blkContent) continue
         content = content.replace(matchBlock[0], blkContent)
         content = content.substring(0, content.indexOf('id:: '))
-        console.log(content)
       }
 
       str += content + '\n\n'
