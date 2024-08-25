@@ -27,6 +27,10 @@ From the marketplace, or manually download the release to load as an unpacked pl
 2. Choose the Pandoc option of your choice.
 6. Save the generated file to your desired location
 
+### Using Filters
+
+Filters are not supported by `pandoc-wasm`. Hence, the plugin offers an easy way to copy the required shell command to your clipboard, so that you can copy and paste into your shell. You will first need to specify the `pathToFilter` and `pathToOutput` in the plugin settings. Regardless, since the plugin simply copies the command to the clipboard, you can make changes before running it.
+
 ## Configuration
 
 Not much configuration is needed. However, if you want to reduce the number of context menu items, you can disable either the block or page context menu items.
