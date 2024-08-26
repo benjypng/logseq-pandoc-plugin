@@ -38,3 +38,7 @@ Not much configuration is needed. However, if you want to reduce the number of c
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+
+## Credits
+
+[pandoc-wasm](https://github.com/georgestagg/pandoc-wasm)
